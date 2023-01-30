@@ -3,26 +3,23 @@ import sys
 # N, K 입력
 N, K = map(int, sys.stdin.readline().split())
 
-# 동전 종류 리스트
+# 동전 종류 리스트 내림차순
 A = []
 for _ in range(N):
-    A.insert(0, int(sys.stdin.readline()))
-
+    A.append(int(sys.stdin.readline()))
+A.reverse()
 
 # 필요한 동전의 개수
 cnt = 0
 
-# K = 0이 될 때까지 반복
-while K > 0:
-    # K에서 A 원소를 큰 것부터 음수가 되지 않고 뺄 수 있으면 빼기
-    # K가 A[0] 이상이면 K - A[0]
-    while K >= A[0]:
-        K -= A[0]
-        # 뺄 때마다 동전 개수 증가
-        cnt += 1
-    # 다 빼고 나면 리스트에서 그 원소 삭제
-    else:
-        del A[0]
 
+for i in A:
+    # K가 0이되면 그만두기
+    if K == 0:
+        break
+    # K를 i로 나눈 몫을 동전 수에 더하고 나머지를 K로
+    else:
+        cnt = cnt + K // i
+        K = K % i
 # 동전 개수 출력
 print(cnt)
