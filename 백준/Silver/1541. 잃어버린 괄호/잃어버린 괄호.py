@@ -1,12 +1,20 @@
-T = input().split('-')
-T2 = [] # + 가 있으면 넣어줄거임
-for i in T:
-    if '+' in i: # 한개의 항목에 +가 있으면 !!!
-        i2 = list(map(int,i.split('+'))) # + 기호로 나눠주고
-        T2.append(sum(i2))
-    else: # 없으면 바로넣어 !
-        T2.append(int(i)) # << int로 해주는거는 0009 이런거때매;;
-answer = T2[0] # 첫값이고
-for i in T2[1:]:
-    answer -= i
-print(answer)
+# 백준 1541. 잃어버린 괄호
+
+minus_split = input().split('-')    # 가장 처음과 마지막 문자는 숫자. 맨 앞에 - 올 경우 없음
+# '-' 기준으로 나눠서 나머지는 묶어서 더해 빼버림
+
+N = len(minus_split)
+
+num = [0] * N
+
+for i in range(N):
+    if '+' in minus_split[i]:
+        num[i] = sum(list(map(int, minus_split[i].split('+'))))
+    else:
+        num[i] = int(minus_split[i])
+
+ans = num[0]
+for i in range(1, N):
+    ans -= num[i]
+
+print(ans)
