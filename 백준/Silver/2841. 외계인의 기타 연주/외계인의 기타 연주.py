@@ -1,11 +1,12 @@
-N, P = map(int, input().split())
+import sys
+N, P = map(int, sys.stdin.readline().split())
 
 stack = [[0] * N for _ in range(7)]     # 1행부터 6행 쓸 것임 - 줄 번호
 tops = [-1] * 7
 
 cnt = 0
 for _ in range(N):
-    n, p = map(int, input().split())        # 줄 번호, 프렛 번호
+    n, p = map(int, sys.stdin.readline().split())        # 줄 번호, 프렛 번호
 
     if tops[n] == -1 or stack[n][tops[n]] < p:     # 그 줄의 스택이 비었거나, top의 프렛번호보다 높으면
         tops[n] += 1
