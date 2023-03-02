@@ -1,45 +1,28 @@
-# 백준 1654 랜선 자르기
-
-# 갖고 있는 랜선 개수 K, 필요한 랜선 개수 N
-# N개를 만들 수 있는 랜선의 최대 길이 출력
+# 백준 1654. 랜선 자르기
 
 import sys
+input = sys.stdin.readline
 
-K, N = map(int, sys.stdin.readline().split())
-lans = [0] * K
+K, N = map(int, input().split())
 
-# 갖고 있는 랜선 길이 리스트 완성
+arr = [0 for _ in range(K)]     # K개의 랜선
 for i in range(K):
-    lans[i] = int(sys.stdin.readline())
+    arr[i] = int(input())
 
-# 랜선 길이 범위
-start = 0
-end = max(lans)
+start = 1   # 만들 랜선 최소 길이
+end = max(arr)      # 만들 수 있는 랜선 최대 길이
 
 while start <= end:
-    mid = (start + end) // 2
+    mid = (start + end) // 2    # 새롭게 만들 랜선의 길이
 
-    # K = 1, N = 1, 1 -> ZeroDivisionError
-    if mid == 0:
-        print(end)
-        break
+    tmp = 0     # 만들 수 있는 랜선 개수
+    for i in range(K):
+        tmp += arr[i] // mid
 
-    # 얻은 랜선 개수 초기화
-    get_N = 0
-
-    # 얻으려는 랜선 길이 mid일 때 얻을 수 있는 랜선 개수 계산
-    for length in lans:
-        get_N += length // mid
-
-    # 원하는 개수보다 작으면 랜선 길이 줄임
-    if get_N < N:
-        end = mid - 1
-    # elif get_N == N:
-    #     print(mid)
-    #     break
-    else:
+    if tmp >= N:        # N개 이상 만들 수 있으면 값 일단 답에 저장하고 길이 더 늘릴 수 있는지 확인
+        ans = mid
         start = mid + 1
-# break 되지 않고 반복 종료했으면
-else:
-    print(end)
+    else:               # N개를 만들 수 없으면 만들 랜선 길이 줄여서 다시 확인
+        end = mid - 1
 
+print(ans)
