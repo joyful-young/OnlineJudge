@@ -1,36 +1,29 @@
-# 백준 2805
+# 백준 2805. 나무 자르기
 
-# 나무의 수, 가져가려는 나무 길이
+import sys
+input = sys.stdin.readline
+
 N, M = map(int, input().split())
 
-# 나무 높이 오름차순
-tree_height = sorted(list(map(int, input().split())))
+arr = list(map(int, input().split()))
 
-# 이분탐색
-start = 0       # 절단기 최소 높이
-end = tree_height[-1]   # 절단기 최대 가능 높이(나무 높이 최댓값)
-
+start = 0   # 절단기 높이 최솟값
+end = max(arr)  # 절단기 높이 최댓값(가장 큰 나무 높이)
 
 while start <= end:
     mid = (start + end) // 2
-    # 가져갈 나무
-    take = 0
 
-    for height in tree_height:
-        # 만약 절단기 높이보다 높으면 자른다
-        if height > mid:
-            take += height - mid
+    tree = 0    # 집에 가져갈 나무 길이
+    for height in arr:
+        if height > mid:    # 절단기 높이보다 나무가 높으면
+            tree += height - mid    # 높은 만큼 집에 가져갈 나무에 추가
 
-    # for문 다 돌면 가져갈 양 나옴
-
-    # 필요량보다 많이 가져가면 절단기 높이 높여 봄
-    if take > M:
+    if tree > M:   # M미터 이상의 길이가 나오면 일단 값 저장하고 높이를 높여서 다시 확인
+        ans = mid
         start = mid + 1
-    elif take == M:
-        print(mid)
+    elif tree == M:
+        ans = mid
         break
-    # 필요량보다 적게 가져가면 절단기 높이 낮춰 봄
-    else:
+    else:           # M미터가 안 되면 높이 낮춰서 다시 확인
         end = mid - 1
-else:
-    print(end)
+print(ans)
