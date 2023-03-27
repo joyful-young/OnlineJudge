@@ -3,27 +3,24 @@ import sys
 input = sys.stdin.readline
 
 M = int(input())
-S = set()
+S = 0
 for _ in range(M):
     op, *x = input().rstrip().split()
     if x:
         x = int(*x)
-    if op == 'add':
-        S.add(x)
-    elif op == 'remove':
-        S.discard(x)
-    elif op == 'check':
-        if x in S:
+    if op == 'add':     # x 추가. 있으면 무시. 무조건 1로
+        S = S | (1 << x)
+    elif op == 'remove':    # x 제거. 없으면 무시. 무조건 0으로
+        S = S & ~(1 << x)
+    elif op == 'check':     # 있으면 1, 없으면 0
+        if S & (1 << x):
             print(1)
         else:
             print(0)
     elif op == 'toggle':
-        if x in S:
-            S.remove(x)
-        else:
-            S.add(x)
+        S = S ^ (1 << x)
     elif op == 'all':
-        S = set(range(1, 21))
+        S = 0b111111111111111111110
     else:
-        S.clear()
+        S = 0
 
