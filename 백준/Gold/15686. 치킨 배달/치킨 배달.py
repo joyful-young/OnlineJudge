@@ -9,6 +9,8 @@ def nCr(n, r, s):
             for ci, cj in comb:
                 tmp = min(tmp, abs(hi - ci) + abs(hj - cj))
             d += tmp
+            if d >= ans:
+                return
         ans = min(ans, d)
     else:
         for j in range(s, n - r + 1):
