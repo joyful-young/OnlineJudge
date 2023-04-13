@@ -1,5 +1,5 @@
-# 백준 16434. 드래곤 앤 던전
 import sys
+import math
 input = sys.stdin.readline
 N, atk = map(int, input().split())
 
@@ -11,7 +11,6 @@ for i in range(N):
         monster += arr[i][2]
 
 left = 1
-# right = 1e12 * 123456
 right = 10 ** 6 * monster
 minV = right
 while left <= right:
@@ -19,10 +18,9 @@ while left <= right:
     cur_hp = mid
     cur_atk = atk
     for t, a, h in arr:
-        if t == 1:      # 몬스터   
-            need = h // cur_atk            # 필요 공격 횟수
-            x = need if h % cur_atk != 0 else need - 1
-            tmp_hp = cur_hp - a * x         # 그만큼의 공격 후 용사 생명력
+        if t == 1:      # 몬스터
+            x = math.ceil(h / cur_atk)     # 필요 공격 횟수
+            tmp_hp = cur_hp - a * (x - 1)         # 그만큼의 공격 후 용사 생명력
             if tmp_hp <= 0:     # 용사 생명력 모자라면
                 left = mid + 1
                 break               # for문 break해서 mid 다시 계산
