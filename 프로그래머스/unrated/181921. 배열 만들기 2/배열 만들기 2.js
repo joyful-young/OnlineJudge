@@ -14,6 +14,8 @@ function solution(l, r) {
     
     for (let num = l; num < r + 1; num++) {
         const set = new Set(String(num))
+
+        
         if (zero_five.isSuperset(set)) {
             answer.push(num)
         }
