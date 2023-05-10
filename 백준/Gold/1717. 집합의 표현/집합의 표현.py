@@ -1,34 +1,27 @@
-# 백준 1717. 집합의 표현
 import sys
 input = sys.stdin.readline
+n, m = list(map(int, input().split()))
+parent = [i for i in range(n + 1)]
 
+def find(x):
+    if parent[x] != x:
+        parent[x] = find(parent[x])
+    return parent[x]
 
-def find_set(x):
-    # while rep[x] != x:
-    #     x = rep[x]
-    # return x
-    
-    # 경로압축?
-    if rep[x] != x:
-        rep[x] = find_set(rep[x])
-    return rep[x]
+def union(a, b):
+    a = find(a)
+    b = find(b)
+    if a < b:
+        parent[a] = b
+    else:
+        parent[b] = a
 
-
-def union(x, y):
-    rep[find_set(y)] = find_set(x)
-
-
-n, m = map(int, input().split())
-
-# make_set
-rep = [i for i in range(n + 1)]
-for _ in range(m):
-    op, a, b = map(int, input().split())
-
-    if op == 0:
+for i in range(m):
+    x, a, b = list(map(int, input().split()))
+    if not x:
         union(a, b)
     else:
-        if find_set(a) == find_set(b):
-            print('YES')
+        if find(a) == find(b):
+            print("YES")
         else:
-            print('NO')
+            print("NO")
