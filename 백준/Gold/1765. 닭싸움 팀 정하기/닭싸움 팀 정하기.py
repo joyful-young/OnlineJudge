@@ -1,13 +1,23 @@
 # 1765. 닭싸움 팀 정하기
 
-def find(student):
-    while rep[student] != student:
-        student = rep[student]
-    return student
+# 팀 대표 찾기
+def find(i):
+    if rep[i] == i:
+        return i
+    
+    rep[i] = find(rep[i])
+    return rep[i]
 
-
+# 팀 합치기
 def union(x, y):
-    rep[find(y)] = find(x)
+    rep_x = find(x)
+    rep_y = find(y)
+
+    # 번호가 더 작은 쪽을 대표로
+    if rep_x <= rep_y:
+        rep[rep_y] = rep_x
+    else:
+        rep[rep_x] = rep_y
 
 
 n = int(input())
