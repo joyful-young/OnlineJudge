@@ -1,45 +1,19 @@
-# 백준 10828
+# 10828. 스택
 import sys
+input = sys.stdin.readline
 
-N = int(sys.stdin.readline())
-
-# 빈 스택
+N = int(input())
 stack = []
-
 for _ in range(N):
-    command = sys.stdin.readline().rstrip()
-
-    # push 명령어 골라내기
-    if command[-1].isdigit():
-        stack.append(int(command.split()[-1]))
-
-    # push 명령어가 아닐 경우
+    command = input().strip()
+    if command == "pop":
+        print(stack.pop() if stack else -1)
+    elif command == "size":
+        print(len(stack))
+    elif command == "empty":
+        print(0 if stack else 1)
+    elif command == "top":
+        print(stack[-1] if stack else -1)
     else:
-        if command == 'pop':
-            # 가장 위 정수 빼고 그 수 출력
-            if stack:
-                num = stack.pop()
-                print(num)
-            # 스택이 비었으면 -1 출력
-            else:
-                print(-1)
-
-        # 스택 내 정수 개수 출력
-        elif command == 'size':
-            print(len(stack))
-
-        elif command == 'empty':
-            # 스택 비지 않았으면 0
-            if stack:
-                print(0)
-            # 스택이 비었으면 1
-            else:
-                print(1)
-
-        elif command == 'top':
-            # 스택 가장 위 정수 출력
-            if stack:
-                print(stack[-1])
-            # 스택 비었으면 -1
-            else:
-                print(-1)
+        c, int_str = command.split()
+        stack.append(int(int_str))
