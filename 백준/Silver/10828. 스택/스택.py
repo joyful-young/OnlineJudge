@@ -3,17 +3,25 @@ import sys
 input = sys.stdin.readline
 
 N = int(input())
-stack = []
+stack = [-1 for _ in range(10000)]
+top = -1
+
 for _ in range(N):
     command = input().strip()
     if command == "pop":
-        print(stack.pop() if stack else -1)
+        if top == -1:
+            print(-1)
+        else:
+            print(stack[top])
+            top -= 1
     elif command == "size":
-        print(len(stack))
+        print(top + 1)
     elif command == "empty":
-        print(0 if stack else 1)
+        print(1 if top == -1 else 0)
     elif command == "top":
-        print(stack[-1] if stack else -1)
+        print(stack[top] if top != -1 else -1)
     else:
         c, int_str = command.split()
-        stack.append(int(int_str))
+        top += 1
+        stack[top] = int(int_str)
+
