@@ -1,5 +1,4 @@
 # 백준 18258. 큐2
-# deque 안쓰고
 
 import sys
 from collections import deque
