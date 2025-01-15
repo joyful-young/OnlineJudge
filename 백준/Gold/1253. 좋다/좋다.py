@@ -1,49 +1,33 @@
-# 백준 1253. 좋다
-def binary_search(s, e, target, i, j):
-    while s <= e:
-        mid = (s + e) // 2
-        if arr[mid] == target:
-            if mid != i and mid != j:
-                good[mid] = 1
-            tmp_l = mid - 1
-            tmp_r = mid + 1
-            while tmp_l >= 0 and arr[tmp_l] == target:
-                if tmp_l != i and tmp_l != j:
-                    good[tmp_l] = 1
-                tmp_l -= 1
+# 1253. 좋다
+def search(idx, current_cnt):
+    target = numbers[idx]
+    left = 0
+    right = N - 1
+    while left < right:
+        if left == idx:
+            left += 1
+            continue
+        if right == idx:
+            right -= 1
+            continue
 
-            while tmp_r < N and arr[tmp_r] == target:
-                if tmp_r != i and tmp_r != j:
-                    good[tmp_r] = 1
-                tmp_r += 1
-
-            return
-        elif arr[mid] > target:
-            e = mid - 1
+        current_sum = numbers[left] + numbers[right]
+        if current_sum == target:
+            current_cnt += 1
+            return current_cnt
+        elif current_sum < target:
+            left += 1
         else:
-            s = mid + 1
-
+            right -= 1
+    return current_cnt
 
 N = int(input())
-arr = list(map(int, input().split()))
+numbers = list(map(int, input().split()))
+numbers.sort()
+result = 0
 
-arr.sort()
+for i in range(N):
+    # 합이 numbers[i] 가 되는 경우가 있는지 확인
+    result = search(i, result)
 
-good = [0] * N
-# check = []
-
-for i in range(N - 1):
-    for j in range(i + 1, N):       # 두 개 조합
-        tmp = arr[i] + arr[j]       # 합 구해서 이진탐색을 할까
-        binary_search(0, N - 1, tmp, i, j)
-        # if tmp not in check:
-        #     binary_search(0, N - 1, tmp)
-        #     check.append(tmp)
-
-# print(good)
-print(sum(good))
-'''
-3
-0 0 1
-0 나와야
-'''
+print(result)
