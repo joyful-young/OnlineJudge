@@ -1,26 +1,19 @@
-# 백준 12865. 평범한 배낭
-
+# 12865. 평범한 배낭
 import sys
+input = sys.stdin.readline
 
-N, K = map(int, sys.stdin.readline().split())
+N, K = map(int, input().split())
+stuff = [tuple(map(int, input().split())) for _ in range(N)]
 
-things = [[0, 0] for _ in range(N + 1)]
-
+# dp[i][j]: i번째 물건까지 확인해서 배낭에 넣었을 때 무게가 j가 될 경우 물건 가치 최댓값
+dp = [[0 for _ in range(K + 1)] for _ in range(N + 1)]
 for i in range(1, N + 1):
-    things[i] = list(map(int, sys.stdin.readline().split()))    # [무게, 가치]
-# print(things)
+    w, v = stuff[i - 1]
+    for j in range(K + 1):
+        if j < w:
+            dp[i][j] = dp[i - 1][j]
+        else:
+            # i번째 물건을 넣지 않을 경우, i번째 물건을 넣을 경우를 비교하여 최댓값으로
+            dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - w] + v)
 
-D = [[0] * (K + 1) for _ in range(N + 1)]   # 행: 0 ~ N, 열: 0 ~ K
-
-# D[i][j]: i번째 물건까지 봤을 때 무게가 j인 배낭의 최대 가치
-
-for i in range(1, N + 1):
-    for j in range(1, K + 1):
-        W, V = things[i]        # i번째 물건의 무게와 가치
-        if j < W:       # 허용 무게보다 많이 나가면 넣지 않는다
-            D[i][j] = D[i - 1][j]
-        else:           # 넣을 무게만큼 빼고 지금 걸 넣거나, 그냥 놔두거나
-            D[i][j] = max(D[i - 1][j], D[i - 1][j - W] + V)
-
-# print(D)
-print(D[N][K])
+print(dp[N][K])
