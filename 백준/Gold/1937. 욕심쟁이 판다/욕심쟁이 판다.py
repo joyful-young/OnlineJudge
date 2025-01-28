@@ -25,7 +25,8 @@ dp = [[-1 for _ in range(n)] for _ in range(n)]
 ans = 1
 for i in range(n):
     for j in range(n):
-        ans = max(ans, dfs(i, j))
+        if dp[i][j] == -1:
+            ans = max(ans, dfs(i, j))
 
 # print(dp)
 print(ans)
