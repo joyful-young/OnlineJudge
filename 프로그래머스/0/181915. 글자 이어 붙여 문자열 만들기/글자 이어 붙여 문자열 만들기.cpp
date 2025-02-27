@@ -1,12 +1,13 @@
 #include <string>
 #include <vector>
+#include <sstream>
 
 using namespace std;
 
 string solution(string my_string, vector<int> index_list) {
-    string answer = "";
-    for (auto idx: index_list) {
-        answer += my_string[idx];
+    std::ostringstream oss;
+    for (auto& idx: index_list) {
+        oss << my_string[idx];
     }
-    return answer;
+    return oss.str();
 }
