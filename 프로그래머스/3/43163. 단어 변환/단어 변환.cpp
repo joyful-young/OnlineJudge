@@ -5,20 +5,9 @@
 using namespace std;
 
 bool can_convert(string word1, string word2) {
-    vector<bool> check(word2.length(), false);
     int cnt = 0;
-    bool is_duplicate;
-    for (char c: word1) {
-        is_duplicate = false;
-        for (int i = 0; i < word2.length(); i++) {
-            if (c == word2[i] && !check[i]) {
-                check[i] = true;
-                is_duplicate = true;
-                break;
-            }
-        }
-        if (!is_duplicate) cnt++;
-        if (cnt > 1) return false;
+    for (int i = 0; i < word1.length(); i++) {
+        if (word1[i] != word2[i]) cnt++;
     }
     return cnt == 1;
 }
