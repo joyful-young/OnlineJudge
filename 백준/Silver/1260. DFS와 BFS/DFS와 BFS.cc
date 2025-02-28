@@ -6,72 +6,63 @@
 
 using namespace std;
 
-int N, M, V;
-
-vector<int> dfs(vector<vector<int>>& graph, int start) {
-    vector<bool> visited(graph.size() + 1, false);
-    stack<int> stk; stk.push(start);
-
-    int t;
-    vector<int> ans;
+void dfs(vector<vector<int>>& graph, vector<int>& visited, int v) {
+    stack<int> stk; stk.push(v);
     while (!stk.empty()) {
-        t = stk.top(); stk.pop();
+        v = stk.top(); stk.pop();
+        if (!visited[v]) {
+            visited[v] = true;
+            cout << v << " ";
 
-        if (!visited[t]) {
-            visited[t] = true;
-            ans.push_back(t);
-
-            for (auto it = graph[t].rbegin(); it != graph[t].rend(); it++) {
+            for (auto it = graph[v].rbegin(); it != graph[v].rend(); it++) {
                 stk.push(*it);
             }
         }
     }
-    return ans;
 }
 
-vector<int> bfs(vector<vector<int>>& graph, int start) {
-    vector<bool> visited(graph.size() + 1, false);
-    queue<int> q; q.push(start);
-    visited[start] = true;
-
-    int t;
-    vector<int> ans = {start};
+void bfs(vector<vector<int>>& graph, vector<int>& visited, int v) {
+    queue<int> q; q.push(v);
+    visited[v] = true;
+    cout << v << " ";
+    
     while (!q.empty()) {
-        t = q.front(); q.pop();
+        v = q.front(); q.pop();
 
-        for (const auto& n: graph[t]) {
-            if (!visited[n]) {
-                visited[n] = true;
-                ans.push_back(n);
-                q.push(n);
+        for (const auto& w: graph[v]) {
+            if (!visited[w]) {
+                visited[w] = true;
+                q.push(w);
+                cout << w << " ";
             }
         }
     }
-    return ans;
 }
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
+    int N, M, V;
     cin >> N >> M >> V;
-    vector<vector<int>> graph(N + 1);
-    int s, e;
+
+    // 인접행렬
+    vector<vector<int>> adjL(N + 1);
+    int v, w;
     while (M--) {
-        cin >> s >> e;
-        graph[s].push_back(e);
-        graph[e].push_back(s);
+        cin >> v >> w;
+        adjL[v].push_back(w);
+        adjL[w].push_back(v);
     }
     for (int i = 1; i < N + 1; i++) {
-        sort(graph[i].begin(), graph[i].end());
+        sort(adjL[i].begin(), adjL[i].end());  // 오름차순 정렬
     }
-    auto dfs_rlt = dfs(graph, V);
-    for (const auto& x: dfs_rlt) {
-        cout << x << " ";
-    }
+
+    vector<int> visited(N + 1, false);
+    dfs(adjL, visited, V);
     cout << "\n";
-    auto bfs_rlt = bfs(graph, V);
-    for (const auto& x: bfs_rlt) {
-        cout << x << " ";
-    }
+    
+    fill(visited.begin(), visited.end(), false);
+    bfs(adjL, visited, V);
+    return 0;
 }
