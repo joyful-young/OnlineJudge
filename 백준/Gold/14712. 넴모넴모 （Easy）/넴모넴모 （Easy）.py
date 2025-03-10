@@ -3,26 +3,26 @@ arr = [[False for _ in range(M)] for _ in range(N)]
 cnt = 0
 
 
-def dfs(l, c):
+def dfs(row, col):
     global cnt
-    if l == N:
+    if row == N:
         cnt += 1
         return
     
     # 다음 칸 구하기
-    nxt_l, nxt_c = (l, c + 1) if c + 1 < M else (l + 1, 0)
+    nxt_row, nxt_col = (row, col + 1) if col + 1 < M else (row + 1, 0)
 
-    # (l, c)에 넴모 안 둘 경우
-    dfs(nxt_l, nxt_c)
+    # (row, col)에 넴모 안 둘 경우
+    dfs(nxt_row, nxt_col)
 
-    # (l, c)에 넴모 둘 경우
-    # (l - 1, c - 1), (l - 1, c), (l, c - 1) 위치가 모두 True이면 (l, c)에는 True 불가
-    if l >= 1 and c >= 1 and arr[l - 1][c - 1] and arr[l - 1][c] and arr[l][c - 1]:
+    # (row, col)에 넴모 둘 경우
+    # (row - 1, col - 1), (row - 1, col), (row, col - 1) 위치가 모두 True이면 (row, col)에는 True 불가
+    if row >= 1 and col >= 1 and arr[row - 1][col - 1] and arr[row - 1][col] and arr[row][col - 1]:
         return
 
-    arr[l][c] = True
-    dfs(nxt_l, nxt_c)
-    arr[l][c] = False
+    arr[row][col] = True
+    dfs(nxt_row, nxt_col)
+    arr[row][col] = False
     
 
 dfs(0, 0)
