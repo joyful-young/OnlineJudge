@@ -7,28 +7,32 @@ directions = [[-1, 0], [1, 0], [0, -1], [0, 1]]
 N, M, K = map(int, input().split())
 arr = [input().rstrip() for _ in range(N)]
 
-# visited[i][j][k]: (i+1, j+1)까지 벽을 k번 부수고 가는 최단거리
-visited = [[[0 for _ in range(K + 1)] for _ in range(M)] for _ in range(N)]
-visited[0][0][0] = 1
-
+# visited[i][j]: (i+1, j+1)에 도달하기까지 최단거리
+visited = [[0 for _ in range(M)] for _ in range(N)]
+visited[0][0] = 1
+# break_cnt[i][j]: (i+1, j+1)에 도달하기까지 벽을 부순 횟수
+break_cnt = [[K + 1 for _ in range(M)] for _ in range(N)]
+break_cnt[0][0] = 0
 def bfs():
-    q = deque([(0, 0, 0)])
+    q = deque([(0, 0)])
     while q:
-        ni, nj, k = q.popleft()
+        ni, nj = q.popleft()
         if ni == N - 1 and nj == M - 1:
-            return visited[N - 1][M - 1][k]
+            return visited[N - 1][M - 1]
 
         for di, dj in directions:
             xi, xj = ni + di, nj + dj
             if not (0 <= xi < N and 0 <= xj < M):
                 continue
 
-            if arr[xi][xj] == "0" and visited[xi][xj][k] == 0:
-                visited[xi][xj][k] = visited[ni][nj][k] + 1
-                q.append((xi, xj, k))
-            elif arr[xi][xj] == "1" and k < K and visited[xi][xj][k + 1] == 0:
-                visited[xi][xj][k + 1] = visited[ni][nj][k] + 1
-                q.append((xi, xj, k + 1))
+            if arr[xi][xj] == "0" and break_cnt[xi][xj] > break_cnt[ni][nj]:
+                visited[xi][xj] = visited[ni][nj] + 1
+                break_cnt[xi][xj] = break_cnt[ni][nj]
+                q.append((xi, xj))
+            elif arr[xi][xj] == "1" and break_cnt[ni][nj] < K and break_cnt[xi][xj] > break_cnt[ni][nj] + 1:
+                visited[xi][xj] = visited[ni][nj] + 1
+                break_cnt[xi][xj] = break_cnt[ni][nj] + 1
+                q.append((xi, xj))
     return -1
 
 print(bfs())
