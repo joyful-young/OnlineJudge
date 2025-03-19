@@ -1,74 +1,77 @@
-# 백준 14500. 테트로미노
-
 import sys
 input = sys.stdin.readline
 
+N, M = map(int, input().split())
+numbers = [list(map(int, input().split())) for _ in range(N)]
+pre_sum = [[0 for _ in range(M + 1)] for _ in range(N + 1)]
+for i in range(1, N + 1):
+    for j in range(1, M + 1):
+        pre_sum[i][j] = numbers[i - 1][j - 1] + pre_sum[i - 1][j] + pre_sum[i][j - 1] - pre_sum[i - 1][j - 1]
 
-def get_sum(x1, y1, x2, y2):
-    return pre_sum[x2][y2] - pre_sum[x2][y1] - pre_sum[x1][y2] + pre_sum[x1][y1]
+regular_sum = lambda r1, c1, r2, c2: pre_sum[r2][c2] - pre_sum[r1 - 1][c2] - pre_sum[r2][c1 - 1] + pre_sum[r1 - 1][c1 - 1]
+
+def put_type1():
+    # 막대 모양
+    # 가로로
+    max_v = 0
+    for i in range(1, N + 1):
+        for j in range(1, M - 2):
+            max_v = max(max_v, regular_sum(i, j, i, j + 3))
+    # 세로로
+    for i in range(1, N - 2):
+        for j in range(1, M + 1):
+            max_v = max(max_v, regular_sum(i, j, i + 3, j))
+    return max_v
 
 
-def check1(maxV):
-    # 가로 방향 확인
-    for i in range(N):
-        for j in range(3, M):
-            maxV = max(maxV, get_sum(i - 1, j - 4, i, j))
-    # 세로 방향 확인
-    for j in range(M):
-        for i in range(3, N):
-            maxV = max(maxV, get_sum(i - 4, j - 1, i, j))
-    return maxV
-
-
-def check2(maxV):
-    # 정사각형 확인
+def put_type2():
+    # 정사각형 모양
+    max_v = 0
     for i in range(1, N):
         for j in range(1, M):
-            maxV = max(maxV, get_sum(i - 2, j - 2, i, j))
-    return maxV
+            max_v = max(max_v, regular_sum(i, j, i + 1, j + 1))
+    return max_v
 
 
-def check3(maxV):
-    # 3 x 2 확인 - L 모양, S 모양, T 모양
-    for i in range(2, N):
+def put_type3():
+    # 3 x 2
+    max_v = 0
+    for i in range(1, N - 1):
         for j in range(1, M):
-            tmp = get_sum(i - 3, j - 2, i, j)
-            shape = [arr[i - 1][j] + arr[i - 2][j], arr[i - 2][j - 1] + arr[i - 1][j - 1],
-                     arr[i - 1][j] + arr[i][j], arr[i][j - 1] + arr[i - 1][j - 1],
-                     arr[i][j - 1] + arr[i - 2][j], arr[i - 2][j - 1] + arr[i][j],
-                     arr[i - 2][j - 1] + arr[i][j - 1], arr[i - 2][j] + arr[i][j]]
-            maxV = max(maxV, tmp - min(shape))
+            temp = regular_sum(i, j, i + 2, j + 1)
+            blank = [
+                # L 모양
+                numbers[i - 1][j] + numbers[i][j],
+                numbers[i][j] + numbers[i + 1][j],
+                numbers[i][j - 1] + numbers[i + 1][j - 1],
+                numbers[i - 1][j - 1] + numbers[i][j - 1],
+                # S 모양
+                numbers[i - 1][j] + numbers[i + 1][j - 1],
+                numbers[i - 1][j - 1] + numbers[i + 1][j],
+                # T 모양
+                numbers[i - 1][j - 1] + numbers[i + 1][j - 1],
+                numbers[i - 1][j] + numbers[i + 1][j]
+            ]
+            max_v = max(max_v, temp - min(blank))
 
-    # 2 x 3 확인
+    # 2 x 3
     for i in range(1, N):
-        for j in range(2, M):
-            tmp = get_sum(i - 2, j - 3, i, j)
-            shape = [arr[i - 1][j - 2] + arr[i - 1][j - 1], arr[i][j - 2] + arr[i][j - 1],
-                     arr[i - 1][j - 1] + arr[i - 1][j], arr[i][j - 1] + arr[i][j],
-                     arr[i][j - 2] + arr[i - 1][j], arr[i - 1][j - 2] + arr[i][j],
-                     arr[i - 1][j - 2] + arr[i - 1][j], arr[i][j - 2] + arr[i][j]]
-            maxV = max(maxV, tmp - min(shape))
-    return maxV
+        for j in range(1, M - 1):
+            temp = regular_sum(i, j, i + 1, j + 2)
+            blank = [
+                # L 모양
+                numbers[i - 1][j - 1] + numbers[i - 1][j],
+                numbers[i][j] + numbers[i][j + 1],
+                numbers[i][j - 1] + numbers[i][j],
+                numbers[i - 1][j] + numbers[i - 1][j + 1],
+                # S 모양
+                numbers[i - 1][j - 1] + numbers[i][j + 1],
+                numbers[i - 1][j + 1] + numbers[i][j - 1],
+                # T 모양
+                numbers[i][j - 1] + numbers[i][j + 1],
+                numbers[i - 1][j - 1] + numbers[i - 1][j + 1]
+            ]
+            max_v = max(max_v, temp - min(blank))
+    return max_v
 
-
-N, M = map(int, input().split())    # 행, 열
-
-arr = [list(map(int, input().split())) for _ in range(N)]   # N x M 행렬
-
-pre_sum = [[arr[i][j] for j in range(M)] + [0] for i in range(N)] + [[0 for _ in range(M + 1)]]
-
-for i in range(N):
-    for j in range(M):
-        pre_sum[i][j] += pre_sum[i][j - 1]
-
-for j in range(M):
-    for i in range(N):
-        pre_sum[i][j] += pre_sum[i - 1][j]
-
-# print(pre_sum)
-
-ans = check1(0)
-ans = check2(ans)
-ans = check3(ans)
-
-print(ans)
+print(max(put_type1(), put_type2(), put_type3()))
