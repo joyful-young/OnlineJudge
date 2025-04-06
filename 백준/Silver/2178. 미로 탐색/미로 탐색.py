@@ -1,42 +1,27 @@
-# 백준 2178. 미로 탐색
-
+import sys
 from collections import deque
-
-di = [0, 1, 0, -1]      # 우하좌상
-dj = [1, 0, -1, 0]
+input = sys.stdin.readline
 
 N, M = map(int, input().split())
+arr = [input().rstrip() for _ in range(N)]
 
-input_arr = [[0] + list(map(int, list(input()))) + [0] for _ in range(N)]
+def bfs():
+    q = deque([(0, 0)])
+    visited = [[0 for _ in range(M)] for _ in range(N)]
+    visited[0][0] = 1
 
-# 인덱스랑 좌표랑 맞추기 + padding
-arr = [[0] * (M + 2)] + input_arr + [[0] * (M + 2)]     # (N + 2) x (M + 2)
-# print(arr)
+    while q:
+        xi, xj = q.popleft()
 
-start = (1, 1)
-goal = (N, M)
+        for di, dj in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            ni, nj = xi + di, xj + dj
 
-queue = deque()
-queue.append(start)
-visited = [[False] * (M + 2) for _ in range(N + 2)]
-# print(visited)
-distance = [[0] * (M + 2) for _ in range(N + 2)]
+            if 0 <= ni < N and 0 <= nj < M and arr[ni][nj] == "1" and visited[ni][nj] == 0:
+                q.append((ni, nj))
+                visited[ni][nj] = visited[xi][xj] + 1
 
-while queue:        # 큐가 빌 때까지
-    i, j = queue.popleft()
-    node = (i, j)
-    visited[i][j] = True    # 방문 표시
+                if ni == N - 1 and nj == M - 1:
+                    return visited[ni][nj]
+    return visited[ni][nj]
 
-    if node == goal:                    # 도착 시 반복문 중단
-        break
-
-    for k in range(4):
-        i2, j2 = (i + di[k], j + dj[k])
-        next_node = (i2, j2)
-        if (not visited[i2][j2]) and arr[i2][j2]:         # 상하좌우 중 방문 안 한 곳이 있고 그곳이 1이면
-            visited[i2][j2] = True      # 방문
-            queue.append(next_node)
-            distance[i2][j2] = distance[i][j] + 1
-
-# 출발지 포함 지나간 칸 수는 거리에 +1
-print(distance[N][M] + 1)
+print(bfs())
