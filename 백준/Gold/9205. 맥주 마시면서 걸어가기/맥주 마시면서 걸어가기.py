@@ -1,32 +1,43 @@
-# 백준 9205. 맥주 마시면서 걸어가기
-
+import sys
 from collections import deque
+input = sys.stdin.readline
 
+DIST = 20 * 50
 
-def bfs():
-    q = deque()
-    visited = [0 for _ in range(n + 2)]
-    q.append(arr[0])
-    visited[0] = 1
+def get_dist(start, end):
+    return abs(start[0] - end[0]) + abs(start[1] - end[1])
+
+def bfs(home, cs, goal):
+    # 맥주 20개 있을 때, 다음 편의점을 1000m 안에 가면 됨
+
+    # 도착지에 바로 갈 수 있을 경우
+    if get_dist(home, goal) <= DIST:
+        return "happy"
+
+        
+    # 편의점별 방문 여부
+    store_cnt = len(cs)
+    visited = [0 for _ in range(store_cnt)]
+    q = deque([home])
 
     while q:
-        ti, tj = q.popleft()
-        if [ti, tj] == arr[n + 1]:
-            print('happy')
-            break
-        for i in range(1, n + 2):
-            if not visited[i] and abs(arr[i][0] - ti) + abs(arr[i][1] - tj) <= 1000:
-                q.append(arr[i])
+        v = q.popleft()
+
+        if get_dist(v, goal) <= DIST:
+            return "happy"
+
+        for i in range(store_cnt):
+            if visited[i] == 0 and get_dist(v, cs[i]) <= DIST:
+                q.append(cs[i])
                 visited[i] = 1
+    return "sad"
 
-    if not visited[n + 1]:
-        print('sad')
+T = int(input())
+for _ in range(T):
+    N = int(input())
+    home = tuple(map(int, input().split()))
+    stores = [tuple(map(int, input().split())) for _ in range(N)]
+    goal = tuple(map(int, input().split()))
 
-
-t = int(input())
-for _ in range(t):
-    n = int(input())    # 편의점의 개수
-
-    arr = [list(map(int, input().split())) for _ in range(n + 2)]
-
-    bfs()
+    print(bfs(home, stores, goal))
+    
