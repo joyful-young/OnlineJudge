@@ -12,17 +12,14 @@ for _ in range(E):
 def dfs(start):
     stack = [start]
     visited = [0 for _ in range(V + 1)]
+    visited[start] = 1
 
     while stack:
         v = stack.pop()
 
-        if visited[v] == 1:
-            continue
-
-        visited[v] = 1
-
         for w in adjL[v]:
             if visited[w] == 0:
+                visited[w] = 1
                 stack.append(w)
 
     return sum(visited) - 1
