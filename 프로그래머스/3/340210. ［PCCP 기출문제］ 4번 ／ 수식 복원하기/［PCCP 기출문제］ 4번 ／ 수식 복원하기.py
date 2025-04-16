@@ -5,66 +5,57 @@ def solution(expressions):
     for expr in expressions:
         A, op, B, _, C = expr.split()
         if C == "X":
-            num_set.update([a for a in A])
-            num_set.update([b for b in B])
+            num_set.update(A)
+            num_set.update(B)
             
             unknown.append([A, op, B])
         else:
-            num_set.update([a for a in A])
-            num_set.update([b for b in B])
-            num_set.update([c for c in C])
+            num_set.update(A)
+            num_set.update(B)
+            num_set.update(C)
             
             known.append([A, op, B, _, C])
     
+    # 최대 숫자 구해 기수 후보 찾기
     max_num = int(sorted(list(num_set), reverse=True)[0])
-    base_candidate = [num for num in range(max_num + 1, 10)]
-    N = len(base_candidate)
-    is_possible = [True for _ in range(N)]
+    bases = [num for num in range(max_num + 1, 10)]
     
+    # 기수가 되는 게 불가능한 것 거르기
+    N = len(bases)
+    is_possible = [True for _ in range(N)]
     for A, op, B, _, C in known:
         for i in range(N):
             if not is_possible[i]:
                 continue
             
-            if not check(base_candidate[i], A, B, C, op):
+            if not check(bases[i], A, B, C, op):
                 is_possible[i] = False
-    
-    base_candidate = [base_candidate[i] for i in range(N) if is_possible[i]]
+    bases = [bases[i] for i in range(N) if is_possible[i]]
     
     answer = []
-    if len(base_candidate) == 1:
-        base = base_candidate[0]
-        for A, op, B in unknown:
-            if op == "+":
-                number = to_decimal(A, base) + to_decimal(B, base)
-                answer.append(f"{A} + {B} = {from_decimal(number, base)}")
-            else:
-                number = to_decimal(A, base) - to_decimal(B, base)
-                answer.append(f"{A} - {B} = {from_decimal(number, base)}")
-    else:
-        for A, op, B in unknown:
-            c_candidates = set()
-            if op == "+":
-                for base in base_candidate:
-                    C = from_decimal(to_decimal(A, base) + to_decimal(B, base), base)
-                    c_candidates.add(C)
-                    
-                if len(c_candidates) == 1:
-                    answer.append(f"{A} + {B} = {list(c_candidates)[0]}")
-                else:
-                    answer.append(f"{A} + {B} = ?")
-            else:
-                for base in base_candidate:
-                    C = from_decimal(to_decimal(A, base) - to_decimal(B, base), base)
-                    c_candidates.add(C)
-                    
-                if len(c_candidates) == 1:
-                    answer.append(f"{A} - {B} = {list(c_candidates)[0]}")
-                else:
-                    answer.append(f"{A} - {B} = ?")
-            
-            
+    for A, op, B in unknown:
+        C = evaluate_unknown(A, B, op, bases)
+        answer.append(f"{A} {op} {B} = {C}")
     return answer
+
+
+def evaluate_unknown(A, B, op, bases):
+    results = set()
+    for base in bases:
+        if op == "+":
+            results.add(add_a_and_b(A, B, base))
+        else:
+            results.add(sub_a_and_b(A, B, base))
+    return list(results)[0] if len(results) == 1 else "?"
+
+
+def add_a_and_b(a, b, base):
+    return from_decimal(to_decimal(a, base) + to_decimal(b, base), base)
+
+
+def sub_a_and_b(a, b, base):
+    return from_decimal(to_decimal(a, base) - to_decimal(b, base), base)
+
 
 decimal_list = [{} for _ in range(10)]
 
