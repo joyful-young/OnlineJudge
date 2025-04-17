@@ -7,8 +7,7 @@ def solution(gems):
     
     left = 0
     right = 0
-    shortest_interval = [0, 0]
-    shortest_length = N + 1
+    interval = [1, N]
     while left < N:
         
         while len(gem_dict) < T and right < N:
@@ -18,9 +17,8 @@ def solution(gems):
                 gem_dict[gems[right]] = 1
             right += 1
         
-        if len(gem_dict) == T and right - left < shortest_length:
-            shortest_length = right - left
-            shortest_interval = [left + 1, right]
+        if len(gem_dict) == T and right - left < interval[1] - interval[0] + 1:
+            interval = [left + 1, right]
             
             
         if gem_dict[gems[left]] == 1:
@@ -29,4 +27,4 @@ def solution(gems):
             gem_dict[gems[left]] -= 1
         left += 1
         
-    return shortest_interval
+    return interval
