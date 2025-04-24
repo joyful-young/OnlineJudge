@@ -44,8 +44,10 @@ for _ in range(T):
     candidates = [int(input()) for _ in range(t)]
     ans = []
     for e in candidates:
-        through_g_h = min(from_s[h] + g_to_h + from_g[e], from_s[g] + g_to_h + from_h[e])
-        if from_s[e] == through_g_h:
+        s_g_h_e = from_s[g] + g_to_h + from_h[e]
+        s_h_g_e = from_s[h] + g_to_h + from_g[e]
+        
+        if from_s[e] == min(s_g_h_e, s_h_g_e):
             ans.append(e)
     ans.sort()
     print(*ans)
