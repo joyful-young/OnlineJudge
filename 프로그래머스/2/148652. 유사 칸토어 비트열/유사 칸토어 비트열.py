@@ -6,11 +6,7 @@ def solution(n, l, r):
 
 def count_one(n, left, right):  # left, right은 0-base idx
     if n == 1:
-        answer = 0
-        for i in range(left, right + 1):
-            if FIRST[i] == "1":
-                answer += 1
-        return answer
+        return FIRST[left:right + 1].count("1")
     
     five_pow = 5 ** (n - 1)
     lq, lr = divmod(left, five_pow)
