@@ -10,8 +10,7 @@ for _ in range(F):
     adjL[b].add(a)
 
 candidates = [num for num in range(1, N + 1) if len(adjL[num]) >= K - 1]
-used = [False] * len(candidates)
-answer = []
+
 
 def choose(s, n, lst):
     # n = len(candidates)
