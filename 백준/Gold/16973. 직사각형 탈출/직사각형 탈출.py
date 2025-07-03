@@ -23,10 +23,7 @@ visited[Sr][Sc] = 0
 
 
 def can_move(lr, lc):
-    if not (1 <= lr <= N and 1 <= lc <= M):
-        return False
-
-    if visited[lr][lc] != MAX_V:
+    if not (1 <= lr <= N and 1 <= lc <= M and visited[lr][lc] == MAX_V):
         return False
     
     rr = lr + H - 1
@@ -34,9 +31,7 @@ def can_move(lr, lc):
     if not (1 <= rr <= N and 1 <= rc <= M):
         return False
 
-    if get_sum(lr, lc, rr, rc) == 0:
-        return True
-    return False
+    return get_sum(lr, lc, rr, rc) == 0
 
 
 q = deque([(Sr, Sc)])
