@@ -1,16 +1,13 @@
 def solution(sequence):
-    N = len(sequence)
-    pulse1 = [-sequence[i] if i % 2 else sequence[i] for i in range(N)]
-    pulse2 = [sequence[i] if i % 2 else -sequence[i] for i in range(N)]
-    
-    return max(get_max_presum(pulse1), get_max_presum(pulse2))
+
+    # 1 부터 연속펄스 부분 수열을 곱한값 찾기 prefix sum 만들기 
+    # maxV - minV 
+    # 각각의 리스트에서 max()
+    answer = 0
+    prefixS = [0]
+    for i in range(len(sequence)):
+        pulse = 1 if i%2 ==0  else -1
+        prefixS.append(prefixS[-1]+pulse*sequence[i])
 
 
-def get_max_presum(seq):
-    max_v = seq[0]
-    current = seq[0]
-    
-    for n in seq[1:]:
-        current = max(n, current + n)
-        max_v = max(max_v, current)
-    return max_v
+    return abs(max(prefixS) - min(prefixS))
