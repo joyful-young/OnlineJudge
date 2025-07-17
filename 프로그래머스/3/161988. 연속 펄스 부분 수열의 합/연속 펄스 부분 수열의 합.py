@@ -7,13 +7,10 @@ def solution(sequence):
 
 
 def get_max_presum(seq):
-    max_v = -100000 * len(seq)
-    current = 0
+    max_v = seq[0]
+    current = seq[0]
     
-    for n in seq:
-        current += n
-        if current < 0:
-            current = 0
-        else:
-            max_v = max(current, max_v)
+    for n in seq[1:]:
+        current = max(n, current + n)
+        max_v = max(max_v, current)
     return max_v
