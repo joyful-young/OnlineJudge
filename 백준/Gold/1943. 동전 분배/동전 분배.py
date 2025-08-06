@@ -1,39 +1,29 @@
 import sys
+
 input = sys.stdin.readline
 
+def solution():
 
-T = 3
-for _ in range(T):
-    N = int(input())
-    coins = []
-    
-    total = 0
-    for _ in range(N):
-        coin, cnt = map(int, input().split())
-        coins.append((coin, cnt))
-        total += coin * cnt
+    def divide(coins, total):
+        if total%2:
+            return 0
+        h = 1<<(total//2)
+        bit = 1
+        for coin, count in coins:
+            for _ in range(count):
+                bit |= bit<<coin
+                if bit&h:
+                    return 1
+        return 0
 
-    q, r = divmod(total, 2)
-    if r != 0:
-        print(0)
-        continue
+    for _ in range(3):
+        N = int(input())
+        coins = []
+        total = 0
+        for _ in range(N):
+            coin, count = map(int, input().split())
+            coins.append((coin, count))
+            total += coin*count
+        print(divide(coins, total))
 
-    dp = [False] * (q + 1)
-    dp[0] = True
-
-    for i in range(N):
-        coin, cnt = coins[i]
-
-        for j in range(q, coin - 1, -1):
-            if dp[j - coin]:
-                for k in range(cnt):
-                    if j + coin * k > q:
-                        break
-                        
-                    dp[j + coin * k] = True
-
-        if dp[q]:
-            print(1)
-            break
-    else:
-        print(0)
+solution()
