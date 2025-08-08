@@ -1,27 +1,31 @@
-# 1202. 보석 도둑
 import sys
-import heapq
+from heapq import heappush, heappop
 input = sys.stdin.readline
 
 
 N, K = map(int, input().split())
-jewels = []
+
+# 보석 (무게, 가격) 최소힙
+gems = []
 for _ in range(N):
-    heapq.heappush(jewels, list(map(int, input().split()))) # 보석 무게 작은 순
+    heappush(gems, tuple(map(int, input().split())))
 
+# 가방. 담을 수 있는 무게 작은 것부터
 bags = [int(input()) for _ in range(K)]
-bags.sort()     # 가방 담을 수 있는 최대 무게 작은 순으로
+bags.sort()
 
-ans = 0
-heap = []
-for max_weight in bags: # 작은 가방부터 채우기
-    while jewels and jewels[0][0] <= max_weight:
-        w, v = heapq.heappop(jewels)
-        heapq.heappush(heap, -v)    # 보석 가격 기준 최대힙
-        
-    if heap:
-        ans -= heapq.heappop(heap)  # 가방에 넣을 수 있는 보석 중 가장 비싼 것
-    elif not jewels:
-        break
 
-print(ans)
+# 현재 가방에 넣을 수 있는 보석들의 가치 최대힙
+pending_gem_values = []
+answer = 0
+for max_weight in bags:
+    # 가방에 담을 수 있는 것들 중 가치가 가장 큰 보석 구하기
+    while gems and gems[0][0] <= max_weight:
+        weight, value = heappop(gems)
+        heappush(pending_gem_values, -value)
+
+    if pending_gem_values:
+        # 음수로 저장해두어서 빼야 함
+        answer -= heappop(pending_gem_values)
+
+print(answer)
