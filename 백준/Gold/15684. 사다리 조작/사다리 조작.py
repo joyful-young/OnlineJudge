@@ -1,76 +1,50 @@
-import sys
-input = sys.stdin.readline
+N, M, H = map(int, input().split())     #  2 ≤ N ≤ 10, 1 ≤ H ≤ 30, 0 ≤ M ≤ (N-1)×H
 
+line = [[0]* (N) for _ in range(H)]
 
-N, M, H = map(int, input().split())
-arr = [[False] * N for _ in range(H + 1)]
 for _ in range(M):
     a, b = map(int, input().split())
-    arr[a][b] = True
+    line[a-1][b-1] = 1
+    line[a-1][b] = 2
 
 
-def go_down(n, ladder):
-    for r in range(1, H + 1):
-        if n < N and ladder[r][n]:
-            n += 1
-        elif n > 1 and ladder[r][n - 1]:
-            n -= 1
-    return n
+def check():
+    same = 0
+    for s in range(N):
+        now = s
+        for j in range(H):
+            if line[j][now] == 1: now += 1
+            elif line[j][now] == 2: now -= 1
+        if now == s: same += 1
+    return same
 
 
-def is_valid(ladder):
-    for i in range(1, N + 1):
-        if i != go_down(i, ladder):
-            return False
-    return True
-
-
-# 3 초과하면 -1 출력
-answer = 4
-candidates = []
-for r in range(1, H + 1):
-    for c in range(1, N):
-        if arr[r][c]:
-            continue
-        if c < N - 1 and arr[r][c + 1]:
-            continue
-        if c > 1 and arr[r][c - 1]:
-            continue
-
-        candidates.append((r, c))
-
-
-
-def bt(start_idx, cnt):
+def dfs(n):
     global answer
 
-    if cnt >= answer:
+    if answer != -1:
+        return
+    
+    temp = check()
+    if temp+(cnt-n)*2 < N:
         return
 
-    if is_valid(arr):
-        answer = cnt
+    if n == cnt:
+        if temp == N:
+            answer = cnt
         return
-
-    if cnt == 3:
-        return
-
-    for idx in range(start_idx, len(candidates)):
-        r, c = candidates[idx]
-
-        if arr[r][c]:
-            continue
-            
-        # 왼쪽에 이미 있는 경우
-        if c > 1 and arr[r][c - 1]:
-            continue
-
-        if c < N - 1 and arr[r][c + 1]:
-            continue
-
-        arr[r][c] = True
-        bt(idx + 1, cnt + 1)
-        arr[r][c] = False
+    
+    for i in range(H):
+        for j in range(N-1):
+            if line[i][j] or line[i][j+1]: continue
+            line[i][j], line[i][j+1] = 1, 2
+            dfs(n+1)
+            line[i][j], line[i][j+1] = 0, 0
 
 
-bt(0, 0)
-print(answer if answer <= 3 else -1)
+answer = -1
+for cnt in range(4):
+    dfs(0)
+    if answer != -1: break
+
+print(answer)
