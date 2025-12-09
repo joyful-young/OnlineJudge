@@ -1,21 +1,24 @@
-N, M, H = map(int, input().split())     #  2 ≤ N ≤ 10, 1 ≤ H ≤ 30, 0 ≤ M ≤ (N-1)×H
+N, M, H = map(int, input().split())
 
-line = [[0]* (N) for _ in range(H)]
+arr = [[0] * N for _ in range(H)]
 
 for _ in range(M):
     a, b = map(int, input().split())
-    line[a-1][b-1] = 1
-    line[a-1][b] = 2
+    arr[a - 1][b - 1] = 1
+    arr[a - 1][b] = 2
 
 
 def check():
     same = 0
-    for s in range(N):
-        now = s
-        for j in range(H):
-            if line[j][now] == 1: now += 1
-            elif line[j][now] == 2: now -= 1
-        if now == s: same += 1
+    for i in range(N):
+        now = i
+        for r in range(H):
+            if arr[r][now] == 1:
+                now += 1
+            elif arr[r][now] == 2:
+                now -= 1
+        if now == i:
+            same += 1
     return same
 
 
@@ -26,7 +29,7 @@ def dfs(n):
         return
     
     temp = check()
-    if temp+(cnt-n)*2 < N:
+    if temp + (cnt - n) * 2 < N:
         return
 
     if n == cnt:
@@ -34,17 +37,19 @@ def dfs(n):
             answer = cnt
         return
     
-    for i in range(H):
-        for j in range(N-1):
-            if line[i][j] or line[i][j+1]: continue
-            line[i][j], line[i][j+1] = 1, 2
-            dfs(n+1)
-            line[i][j], line[i][j+1] = 0, 0
+    for r in range(H):
+        for c in range(N-1):
+            if arr[r][c] or arr[r][c + 1]:
+                continue
+            arr[r][c], arr[r][c + 1] = 1, 2
+            dfs(n + 1)
+            arr[r][c], arr[r][c + 1] = 0, 0
 
 
 answer = -1
 for cnt in range(4):
     dfs(0)
-    if answer != -1: break
+    if answer != -1:
+        break
 
 print(answer)
