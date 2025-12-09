@@ -23,8 +23,7 @@ while idx < N:
     
     idx += 1
 
-while len(stack) >= 2:
-    cnt += stack[-2] - stack[-1]
-    stack.pop()
+if len(stack) >= 2:
+    cnt += stack[0] - stack[-1]
 
 print(cnt)
